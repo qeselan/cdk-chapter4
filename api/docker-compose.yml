@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=testuser
+      - POSTGRES_USER=testuser
+      - POSTGRES_DB=todolist
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dataset:/docker-entrypoint-initdb.d
+# psql postgresql://test-user:test-user@localhost:5432/note_service

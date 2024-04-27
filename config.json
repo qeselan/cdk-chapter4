@@ -1,0 +1,5 @@
+{
+  "domain_name": "dev.pepega.click",
+  "backend_subdomain": "api",
+  "frontend_subdomain": "web"
+}

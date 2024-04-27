@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "PORT=3333 NODE_ENV=development tsnd index.ts",
+    "build": "tsc",
+    "start": "NODE_ENV=production node index.js"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/node": "10.17.27",
+    "@types/pg": "^8.11.5",
+    "@types/uuid": "^8.3.4",
+    "dotenv": "^16.0.3",
+    "morgan": "^1.10.0",
+    "ts-node": "^10.7.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.563.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "pg": "^8.11.5",
+    "uuid": "^8.3.2"
+  }
+}
