@@ -6,7 +6,9 @@ import { Port, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Frontend } from "./constructs/Frontend";
 import { Backend } from "./constructs/Backend";
 import { RDS } from "./constructs/RDS";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { FckNatInstanceProvider } from "cdk-fck-nat";
 
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
@@ -27,7 +29,16 @@ export class InfrastructureStack extends cdk.Stack {
       hosted_zone: this.route53.hosted_zone,
     });
 
+    const natGatewayProvider = new FckNatInstanceProvider({
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T4G,
+        ec2.InstanceSize.MICRO
+      ),
+    });
+
     this.vpc = new Vpc(this, "Vpc", {
+      maxAzs: 2,
+      natGatewayProvider,
       subnetConfiguration: [
         { cidrMask: 24, name: "public", subnetType: SubnetType.PUBLIC },
         {
@@ -42,6 +53,11 @@ export class InfrastructureStack extends cdk.Stack {
         },
       ],
     });
+
+    natGatewayProvider.securityGroup.addIngressRule(
+      ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
+      Port.allTraffic()
+    );
 
     this.frontend = new Frontend(this, "Frontend", {
       acm: this.acm,
