@@ -72,13 +72,13 @@ export class Backend extends Construct {
       protocol: ecs.Protocol.TCP,
     });
 
-    this.service = new ecs.Ec2Service(scope, "BackendService", {
+    this.service = new ecs.Ec2Service(this, "BackendService", {
       cluster: this.cluster,
       taskDefinition: this.task_definition,
     });
 
     this.load_balancer = new ApplicationLoadBalancer(
-      scope,
+      this,
       "BackendLoadBalancer",
       {
         vpc: props.vpc,
@@ -117,7 +117,7 @@ export class Backend extends Construct {
       recordName: `${backend_subdomain}.${domain_name}`,
     });
 
-    new CfnOutput(scope, "BackendURL", {
+    new CfnOutput(this, "BackendURL", {
       value: this.load_balancer.loadBalancerDnsName,
     });
   }

@@ -9,7 +9,7 @@ export class Route53 extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    this.hosted_zone = HostedZone.fromLookup(scope, "HostedZone", {
+    this.hosted_zone = HostedZone.fromLookup(this, "HostedZone", {
       domainName: domain_name,
     });
   }

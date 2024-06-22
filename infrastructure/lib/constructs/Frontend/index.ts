@@ -29,7 +29,7 @@ export class Frontend extends Construct {
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
 
-    this.web_bucket = new Bucket(scope, "WebBucket", {
+    this.web_bucket = new Bucket(this, "WebBucket", {
       websiteIndexDocument: "index.html",
       websiteErrorDocument: "index.html",
       publicReadAccess: true,
@@ -40,7 +40,7 @@ export class Frontend extends Construct {
     });
 
     this.web_bucket_deployment = new BucketDeployment(
-      scope,
+      this,
       "WebBucketDeployment",
       {
         sources: [
@@ -52,7 +52,7 @@ export class Frontend extends Construct {
       }
     );
 
-    this.distribution = new Distribution(scope, "Frontend-Distribution", {
+    this.distribution = new Distribution(this, "Frontend-Distribution", {
       certificate: props.acm.certificate,
       domainNames: [`${frontend_subdomain}.${domain_name}`],
       defaultRootObject: "index.html",
@@ -62,13 +62,13 @@ export class Frontend extends Construct {
       },
     });
 
-    new ARecord(scope, "FrontendAliasRecord", {
+    new ARecord(this, "FrontendAliasRecord", {
       zone: props.route53.hosted_zone,
       target: RecordTarget.fromAlias(new CloudFrontTarget(this.distribution)),
       recordName: `${frontend_subdomain}.${domain_name}`,
     });
 
-    new CfnOutput(scope, "FrontendURL", {
+    new CfnOutput(this, "FrontendURL", {
       value: this.web_bucket.bucketWebsiteUrl,
     });
   }
